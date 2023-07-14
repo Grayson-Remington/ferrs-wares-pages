@@ -27,7 +27,7 @@ export default function Example({ product }) {
 			<div className='xl:w-2/5 md:w-1/2 lg:ml-8 md:ml-6 md:mt-0 mt-6'>
 				<div className='border-b border-gray-200 pb-6'>
 					<p className='text-sm leading-none text-gray-600'>
-						Ferr's Wares Collection
+						Ferr&apos;s Wares Collection
 					</p>
 					<h1
 						className='
