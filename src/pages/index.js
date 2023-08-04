@@ -39,7 +39,7 @@ export default function Home({ products }) {
 					}}
 				/>
 			</div>
-
+			{/* Comment to update the commit*/}
 			<div className='mx-auto max-w-2xl px-4  sm:px-6  lg:max-w-7xl lg:px-8 brightness-100 bg-gray-200 bg-opacity-50  flex flex-col py-4 rounded-b-lg'>
 				<div className='h-full w-full self-center  brightness-100 bg-gray-200 bg-opacity-50 flex flex-col mt-8  rounded-t-lg p-4'>
 					<Carousel
