@@ -1,7 +1,7 @@
 import { storefront } from '../../utils';
 import { useState } from 'react';
 import Link from 'next/link';
-
+import { BsFillArrowLeftCircleFill } from 'react-icons/bs';
 export default function Example({ product, products }) {
 	const [show, setShow] = useState(false);
 	const [show2, setShow2] = useState(false);
@@ -18,13 +18,21 @@ export default function Example({ product, products }) {
 		window.location.href = webUrl;
 	}
 	return (
-		<div className='md:flex items-center justify-center py-12 2xl:px-20 md:px-8 px-8'>
-			<div className='xl:w-2/6 lg:w-2/5 md:w-80 p-4'>
-				<img
-					className='w-full rounded-xl'
-					alt='img of a girl posing'
-					src={image.url}
-				/>
+		<div className='md:flex-row py-12 2xl:px-20 md:px-8 px-8 relative items-stretch justify-center flex flex-col'>
+			<div className='relative xl:w-2/6 lg:w-2/5 w-full flex flex-col'>
+				<Link
+					href='/'
+					className='relative'
+				>
+					<BsFillArrowLeftCircleFill size={40} />
+				</Link>
+				<div className=' p-4 relative'>
+					<img
+						className='w-full rounded-xl'
+						alt='img of a girl posing'
+						src={image.url}
+					/>
+				</div>
 			</div>
 
 			<div className='xl:w-2/5 md:w-1/2 lg:ml-8 md:ml-6 md:mt-0 mt-6'>
