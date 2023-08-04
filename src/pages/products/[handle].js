@@ -18,7 +18,7 @@ export default function Example({ product, products }) {
 		window.location.href = webUrl;
 	}
 	return (
-		<div className='md:flex items-center justify-center py-12 2xl:px-20 md:px-6 px-4'>
+		<div className='md:flex items-center justify-center py-12 2xl:px-20 md:px-8 px-8'>
 			<div className='xl:w-2/6 lg:w-2/5 md:w-80 p-4'>
 				<img
 					className='w-full rounded-xl'
@@ -46,10 +46,21 @@ export default function Example({ product, products }) {
 						{product.title}
 					</h1>
 				</div>
-
-				<button
-					onClick={checkout}
-					className='
+				<div className='relative'>
+					{product.totalInventory == 0 && (
+						<div className='absolute z-50 flex place-content-center place-items-center h-12 w-12 -left-4 -top-4'>
+							<div
+								id='burst-12'
+								className='absolute'
+							></div>
+							<div className='absolute text-sm text-center font-serif text-white drop-shadow-[0_2.2px_2.2px_rgba(0,0,0,0.8)]'>
+								Sold Out!
+							</div>
+						</div>
+					)}
+					<button
+						onClick={checkout}
+						className='
 						focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800
 						text-base
 						flex
@@ -62,9 +73,11 @@ export default function Example({ product, products }) {
 						py-4
 						hover:bg-gray-700
 					'
-				>
-					{product.priceRange.minVariantPrice.amount}
-				</button>
+					>
+						{product.priceRange.minVariantPrice.amount}
+					</button>
+				</div>
+
 				<div>
 					<p className='xl:pr-48 text-base lg:leading-tight leading-normal text-gray-600 mt-7'>
 						{product.description}
