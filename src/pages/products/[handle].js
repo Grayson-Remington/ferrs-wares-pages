@@ -1,13 +1,16 @@
 import { storefront } from '../../utils';
 import { useState } from 'react';
+import Link from 'next/link';
 
-export default function Example({ product }) {
+export default function Example({ product, products }) {
 	const [show, setShow] = useState(false);
 	const [show2, setShow2] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const image = product.images.edges[0].node;
 	const variantId = product.variants.edges[0].node.id;
-
+	const relatedProducts = products.edges
+		.filter((item) => item.node.handle !== product.handle)
+		.slice(0, 4);
 	async function checkout() {
 		setIsLoading(true);
 		const { data } = await storefront(checkoutMutation, { variantId });
@@ -15,8 +18,8 @@ export default function Example({ product }) {
 		window.location.href = webUrl;
 	}
 	return (
-		<div className='md:flex items-start justify-center py-12 2xl:px-20 md:px-6 px-4'>
-			<div className='xl:w-2/6 lg:w-2/5 w-80 block'>
+		<div className='md:flex items-center justify-center py-12 2xl:px-20 md:px-6 px-4'>
+			<div className='xl:w-2/6 lg:w-2/5 md:w-80 p-4'>
 				<img
 					className='w-full rounded-xl'
 					alt='img of a girl posing'
@@ -43,66 +46,7 @@ export default function Example({ product }) {
 						{product.title}
 					</h1>
 				</div>
-				<div className='py-4 border-b border-gray-200 flex items-center justify-between'>
-					<p className='text-base leading-4 text-gray-800'>Colours</p>
-					<div className='flex items-center justify-center'>
-						<p className='text-sm leading-none text-gray-600'>
-							Smoke Blue with red accents
-						</p>
-						<div
-							className='
-								w-6
-								h-6
-								bg-gradient-to-b
-								from-gray-900
-								to-indigo-500
-								ml-3
-								mr-4
-								cursor-pointer
-							'
-						></div>
-						<svg
-							className='cursor-pointer'
-							width='6'
-							height='10'
-							viewBox='0 0 6 10'
-							fill='none'
-							xmlns='http://www.w3.org/2000/svg'
-						>
-							<path
-								d='M1 1L5 5L1 9'
-								stroke='#4B5563'
-								strokeWidth='1.25'
-								strokeLinecap='round'
-								strokeLinejoin='round'
-							/>
-						</svg>
-					</div>
-				</div>
-				<div className='py-4 border-b border-gray-200 flex items-center justify-between'>
-					<p className='text-base leading-4 text-gray-800'>Size</p>
-					<div className='flex items-center justify-center'>
-						<p className='text-sm leading-none text-gray-600 mr-3'>
-							38.2
-						</p>
-						<svg
-							className='cursor-pointer'
-							width='6'
-							height='10'
-							viewBox='0 0 6 10'
-							fill='none'
-							xmlns='http://www.w3.org/2000/svg'
-						>
-							<path
-								d='M1 1L5 5L1 9'
-								stroke='#4B5563'
-								strokeWidth='1.25'
-								strokeLinecap='round'
-								strokeLinejoin='round'
-							/>
-						</svg>
-					</div>
-				</div>
+
 				<button
 					onClick={checkout}
 					className='
@@ -124,20 +68,6 @@ export default function Example({ product }) {
 				<div>
 					<p className='xl:pr-48 text-base lg:leading-tight leading-normal text-gray-600 mt-7'>
 						{product.description}
-					</p>
-					<p className='text-base leading-4 mt-7 text-gray-600'></p>
-					<p className='text-base leading-4 mt-4 text-gray-600'>
-						Length: 13.2 inches
-					</p>
-					<p className='text-base leading-4 mt-4 text-gray-600'>
-						Height: 10 inches
-					</p>
-					<p className='text-base leading-4 mt-4 text-gray-600'>
-						Depth: 5.1 inches
-					</p>
-					<p className='md:w-96 text-base leading-normal text-gray-600 mt-4'>
-						Composition: 100% calf leather, inside: 100% lamb
-						leather
 					</p>
 				</div>
 				<div>
@@ -241,6 +171,37 @@ export default function Example({ product }) {
 						</div>
 					</div>
 				</div>
+
+				<div className='grid grid-cols-2 grid-rows-2 gap-4'>
+					{relatedProducts.map((item) => {
+						const product = item.node;
+						const image = product.images.edges[0].node;
+						return (
+							<div
+								key={product.handle}
+								className='relative group'
+							>
+								<Link
+									key={product.handle}
+									href={`/products/${product.handle}`}
+									className=''
+								>
+									<div className='aspect-w-4 aspect-h-3 overflow-hidden rounded-lg'>
+										<img
+											src={image.url}
+											alt={image.altText}
+											className='object-center object-cover hover:opacity-75'
+										/>
+									</div>
+								</Link>
+								<h1>{product.title}</h1>
+								<h1>
+									{product.priceRange.minVariantPrice.amount}
+								</h1>
+							</div>
+						);
+					})}
+				</div>
 			</div>
 		</div>
 	);
@@ -275,6 +236,7 @@ export async function getStaticProps({ params }) {
 	return {
 		props: {
 			product: data.product,
+			products: data.products,
 		},
 	};
 }
@@ -285,6 +247,7 @@ const singleProductQuery = gql`
 	query SingleProduct($handle: String!) {
 		product(handle: $handle) {
 			title
+			totalInventory
 			description
 			handle
 			id
@@ -307,6 +270,30 @@ const singleProductQuery = gql`
 				edges {
 					node {
 						id
+					}
+				}
+			}
+		}
+		products(first: 5) {
+			edges {
+				node {
+					title
+					totalInventory
+					handle
+					id
+					tags
+					priceRange {
+						minVariantPrice {
+							amount
+						}
+					}
+					images(first: 1) {
+						edges {
+							node {
+								url
+								altText
+							}
+						}
 					}
 				}
 			}
