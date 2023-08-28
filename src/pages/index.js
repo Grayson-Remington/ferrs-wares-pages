@@ -4,6 +4,7 @@ import { storefront } from '../utils';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { Carousel } from '@material-tailwind/react';
+import ContactForm from '@/components/contactForm';
 export default function Home({ products }) {
 	const [images, setImages] = useState([]);
 
@@ -113,6 +114,7 @@ export default function Home({ products }) {
 						);
 					})}
 				</div>
+				<ContactForm />
 			</div>
 		</div>
 	);
@@ -131,7 +133,7 @@ const gql = String.raw;
 
 const productsQuery = gql`
 	query Products {
-		products(first: 5) {
+		products(first: 6) {
 			edges {
 				node {
 					title

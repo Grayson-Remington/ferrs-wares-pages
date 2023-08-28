@@ -8,15 +8,37 @@ export default function Example({ product, products }) {
 	const [isLoading, setIsLoading] = useState(false);
 	const image = product.images.edges[0].node;
 	const variantId = product.variants.edges[0].node.id;
-	const relatedProducts = products.edges
-		.filter((item) => item.node.handle !== product.handle)
-		.slice(0, 4);
+
+	function shuffle(array) {
+		let currentIndex = array.length,
+			randomIndex;
+
+		// While there remain elements to shuffle.
+		while (currentIndex > 0) {
+			// Pick a remaining element.
+			randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex--;
+
+			// And swap it with the current element.
+			[array[currentIndex], array[randomIndex]] = [
+				array[randomIndex],
+				array[currentIndex],
+			];
+		}
+
+		return array;
+	}
+
+	const relatedProducts = shuffle(
+		products.edges.filter((item) => item.node.handle !== product.handle)
+	).slice(0, 4);
 	async function checkout() {
 		setIsLoading(true);
 		const { data } = await storefront(checkoutMutation, { variantId });
 		const { webUrl } = data.checkoutCreate.checkout;
 		window.location.href = webUrl;
 	}
+
 	return (
 		<div className='md:flex-row py-12 2xl:px-20 md:px-8 px-8 relative items-stretch justify-center flex flex-col'>
 			<div className='relative xl:w-2/6 lg:w-2/5 w-full flex flex-col'>
@@ -231,7 +253,7 @@ export default function Example({ product, products }) {
 export async function getStaticPaths() {
 	const { data } = await storefront(gql`
 		{
-			products(first: 5) {
+			products(first: 6) {
 				edges {
 					node {
 						handle
@@ -295,7 +317,7 @@ const singleProductQuery = gql`
 				}
 			}
 		}
-		products(first: 5) {
+		products(first: 6) {
 			edges {
 				node {
 					title
