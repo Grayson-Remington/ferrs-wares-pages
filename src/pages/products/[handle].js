@@ -2,6 +2,7 @@ import { storefront } from '../../utils';
 import { useState } from 'react';
 import Link from 'next/link';
 import { BsFillArrowLeftCircleFill } from 'react-icons/bs';
+
 export default function Example({ product, products }) {
 	const [show, setShow] = useState(false);
 	const [show2, setShow2] = useState(false);

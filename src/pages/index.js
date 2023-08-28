@@ -1,5 +1,3 @@
-import Image from 'next/image';
-import { Inter } from 'next/font/google';
 import { storefront } from '../utils';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
